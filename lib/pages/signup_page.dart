@@ -1,6 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:instagram_flutter_clone/resources/auth_methods.dart';
 import 'package:instagram_flutter_clone/utils/colors.dart';
+import 'package:instagram_flutter_clone/utils/utils.dart';
 import 'package:instagram_flutter_clone/widgets/text_field_input.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -15,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -23,6 +29,13 @@ class _SignUpPageState extends State<SignUpPage> {
     _passwordController.dispose();
     _bioController.dispose();
     _usernameController.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
   }
 
   @override
@@ -43,6 +56,33 @@ class _SignUpPageState extends State<SignUpPage> {
                 height: 64,
               ),
               const SizedBox(height: 64),
+              // circular widget to accept and show our selected file
+              Stack(
+                children: [
+                  _image != null ?
+                  CircleAvatar(
+                    radius: 64,
+                    backgroundImage: MemoryImage(
+                      _image!
+                    ),
+                  ) :
+                  const CircleAvatar(
+                    radius: 64,
+                    backgroundImage: NetworkImage(
+                        'http://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg'
+                    ),
+                  ),
+                  Positioned(
+                    bottom: -10,
+                    left: 80,
+                    child: IconButton(
+                      onPressed: selectImage,
+                      icon: const Icon(Icons.add_a_photo),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 24,),
               // text field input for username
               TextFieldInput(
                 textEditingController: _usernameController,
@@ -73,7 +113,15 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(height: 24),
               // button login
               InkWell(
-                onTap: () {},
+                onTap: () async {
+                  String res = await AuthMethods().signUpUser(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    username: _usernameController.text,
+                    bio: _bioController.text,
+                    file: _image!
+                  );
+                },
                 child: Container(
                   width: double.infinity,
                   alignment: Alignment.center,
