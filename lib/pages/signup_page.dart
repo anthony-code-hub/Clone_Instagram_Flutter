@@ -21,6 +21,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
+  bool _isLoading = false;
+
 
   @override
   void dispose() {
@@ -35,6 +37,26 @@ class _SignUpPageState extends State<SignUpPage> {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       _image = img;
+    });
+  }
+
+  void signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        username: _usernameController.text,
+        bio: _bioController.text,
+        file: _image!
+    );
+
+    if(res != 'success') {
+      showSnackBar(context, res);
+    }
+    setState(() {
+      _isLoading = false;
     });
   }
 
@@ -63,7 +85,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   CircleAvatar(
                     radius: 64,
                     backgroundImage: MemoryImage(
-                      _image!
+                        _image!
                     ),
                   ) :
                   const CircleAvatar(
@@ -113,28 +135,26 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(height: 24),
               // button login
               InkWell(
-                onTap: () async {
-                  String res = await AuthMethods().signUpUser(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    username: _usernameController.text,
-                    bio: _bioController.text,
-                    file: _image!
-                  );
-                },
+                onTap: signUpUser,
                 child: Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(4)
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: const ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(4)
+                          ),
                         ),
+                        color: blueColor
+                    ),
+                    child: _isLoading ?
+                    const Center(
+                      child: CircularProgressIndicator(
+                        color: primaryColor,
                       ),
-                      color: blueColor
-                  ),
-                  child: const Text('Log in'),
+                    ) :
+                    const Text('Log in')
                 ),
               ),
               const SizedBox(
