@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:instagram_flutter_clone/models/user.dart';
 import 'package:instagram_flutter_clone/resources/storage_methods.dart';
 
 class AuthMethods {
@@ -35,15 +35,19 @@ class AuthMethods {
         );
 
         // add user to database
-        _firebaseFirestore.collection('users').doc(cred.user!.uid).set({
-          'username': username,
-          'uid': cred.user!.uid,
-          'email': email,
-          'bio': bio,
-          'followers': [],
-          'following': [],
-          'photoUrl': photoUrl,
-        });
+
+        User user = User(
+            email: email,
+            uid: cred.user!.uid,
+            photoUrl: photoUrl,
+            username: username,
+            bio: bio,
+            followers: [],
+            following: []
+        );
+
+        _firebaseFirestore.collection('users')
+            .doc(cred.user!.uid).set(user.toJson());
 
         res = 'success';
       }
