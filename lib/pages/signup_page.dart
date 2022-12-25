@@ -8,6 +8,8 @@ import 'package:instagram_flutter_clone/utils/colors.dart';
 import 'package:instagram_flutter_clone/utils/utils.dart';
 import 'package:instagram_flutter_clone/widgets/text_field_input.dart';
 
+import 'login_page.dart';
+
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
@@ -58,6 +60,14 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void navigateToLogin() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => const LoginPage()
+      ),
+    );
   }
 
   @override
@@ -126,6 +136,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 textInputType: TextInputType.text,
                 isPass: true,
               ),
+              SizedBox(height: 24),
               // text field input for bio
               TextFieldInput(
                 textEditingController: _bioController,
@@ -172,13 +183,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: Text('Do you have an account?')
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: navigateToLogin,
                     child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8,
                         ),
                         child: const Text(
-                          ' Sign up.',
+                          ' Login.',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:instagram_flutter_clone/pages/signup_page.dart';
 import 'package:instagram_flutter_clone/resources/auth_methods.dart';
 import 'package:instagram_flutter_clone/utils/colors.dart';
 import 'package:instagram_flutter_clone/utils/utils.dart';
@@ -46,6 +47,14 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  void navigateToSignup() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => const SignUpPage()
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,6 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Enter your password',
                 textInputType: TextInputType.text,
                 isPass: true,
+              ),
+              const SizedBox(
+                height: 12,
               ),
               // button login
               InkWell(
@@ -117,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text('Do you have an account?')
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: navigateToSignup,
                     child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8,
