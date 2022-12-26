@@ -115,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 textColor: primaryColor,
                                 borderColor: Colors.grey,
                                 function: () async {
-                                  await AuthMethods.signOut();
+                                  await AuthMethods().signOut();
                                   Navigator.of(context)
                                       .pushReplacement(
                                     MaterialPageRoute(
