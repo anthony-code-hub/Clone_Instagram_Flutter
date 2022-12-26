@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_flutter_clone/pages/login_page.dart';
+import 'package:instagram_flutter_clone/resources/auth_methods.dart';
 import 'package:instagram_flutter_clone/resources/firestore_methods.dart';
 import 'package:instagram_flutter_clone/utils/colors.dart';
 import 'package:instagram_flutter_clone/utils/utils.dart';
@@ -108,11 +110,19 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               FirebaseAuth.instance.currentUser!.uid == widget.uid ?
                               FollowButton(
-                                text: 'Edit profile',
+                                text: 'Sign out',
                                 backgroundColor: mobileBackgroundColor,
                                 textColor: primaryColor,
                                 borderColor: Colors.grey,
-                                function: () {},
+                                function: () async {
+                                  await AuthMethods.signOut();
+                                  Navigator.of(context)
+                                      .pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => const LoginPage()
+                                    ),
+                                  );
+                                },
                               ) :
                               isFollowing ?
                               FollowButton(
@@ -191,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               crossAxisCount: 3,
                               crossAxisSpacing:  5,
                               mainAxisSpacing: 1.5,
-                            childAspectRatio: 1
+                              childAspectRatio: 1
                           ),
                           itemBuilder: (context, index) {
                             DocumentSnapshot snap = (snapshot.data! as dynamic).docs[index];

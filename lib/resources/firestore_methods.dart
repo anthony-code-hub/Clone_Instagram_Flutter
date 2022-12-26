@@ -127,7 +127,6 @@ class FirestoreMethods {
         });
       }
 
-
     } catch(e) {
       print(e.toString());
     }
